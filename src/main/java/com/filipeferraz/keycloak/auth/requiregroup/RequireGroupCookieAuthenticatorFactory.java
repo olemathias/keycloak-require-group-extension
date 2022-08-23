@@ -1,11 +1,8 @@
 package com.filipeferraz.keycloak.auth.requiregroup;
 
 import org.keycloak.Config;
-import org.keycloak.OAuth2Constants;
 import org.keycloak.authentication.Authenticator;
 import org.keycloak.authentication.AuthenticatorFactory;
-import org.keycloak.authentication.DisplayTypeAuthenticatorFactory;
-import org.keycloak.authentication.authenticators.AttemptedAuthenticator;
 import org.keycloak.models.AuthenticationExecutionModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
@@ -17,7 +14,7 @@ import java.util.List;
  * Based on class CookieAuthenticatorFactory
  * https://github.com/keycloak/keycloak/blob/master/services/src/main/java/org/keycloak/authentication/authenticators/browser/CookieAuthenticatorFactory.java
  */
-public class RequireGroupCookieAuthenticatorFactory implements AuthenticatorFactory, DisplayTypeAuthenticatorFactory {
+public class RequireGroupCookieAuthenticatorFactory implements AuthenticatorFactory {
     public static final String PROVIDER_ID = "require-group-auth-cookie";
     static RequireGroupCookieAuthenticator SINGLETON = new RequireGroupCookieAuthenticator();
 
@@ -30,13 +27,6 @@ public class RequireGroupCookieAuthenticatorFactory implements AuthenticatorFact
     @Override
     public Authenticator create(KeycloakSession session) {
         return SINGLETON;
-    }
-
-    @Override
-    public Authenticator createDisplay(KeycloakSession session, String displayType) {
-        if (displayType == null) return SINGLETON;
-        if (!OAuth2Constants.DISPLAY_CONSOLE.equalsIgnoreCase(displayType)) return null;
-        return AttemptedAuthenticator.SINGLETON;  // ignore this authenticator
     }
 
     @Override

@@ -24,7 +24,7 @@ public class RequireGroupAuthenticator implements Authenticator {
         UserModel user = context.getUser();
 
         if (!RequireGroupCommon.isAllowed(configModel, realm, user)) {
-            context.forkWithErrorMessage(new FormMessage("label", "Permission denied for user on client " + context.getSession().getContext().getClient().getClientId() + "."));
+            context.forkWithErrorMessage(new FormMessage("label", "Permission denied to " + context.getSession().getContext().getClient().getName() + "."));
             return;
         }
 
