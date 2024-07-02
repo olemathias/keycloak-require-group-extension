@@ -6,6 +6,7 @@ import org.keycloak.models.GroupModel;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
 import org.keycloak.models.utils.KeycloakModelUtils;
+import org.keycloak.models.KeycloakSession;
 import org.keycloak.provider.ProviderConfigProperty;
 
 import java.util.ArrayList;
@@ -62,7 +63,7 @@ public class RequireGroupCommon {
         return configProperties;
     }
 
-    public static boolean isAllowed(AuthenticatorConfigModel configModel, RealmModel realm, UserModel user) {
+    public static boolean isAllowed(KeycloakSession session, AuthenticatorConfigModel configModel, RealmModel realm, UserModel user) {
         String groups = configModel.getConfig().get(GROUP_ATTRIBUTE_NAME);
         String acao = configModel.getConfig().getOrDefault(ACTION_ATTRIBUTE_NAME, ALLOW_ACTION);
         String operacao = configModel.getConfig().getOrDefault(OPERATION_ATTRIBUTE_NAME, AND_OPERATION);
@@ -76,7 +77,7 @@ public class RequireGroupCommon {
         List<String> notFoundGroups = new ArrayList<>();
 
         List<GroupModel> groupsList = Arrays.stream(groups.split(","))
-                .map(grupo -> localizarGrupoKeycloak(realm, notFoundGroups, grupo))
+                .map(grupo -> localizarGrupoKeycloak(session, realm, notFoundGroups, grupo))
                 .filter(Objects::nonNull).collect(Collectors.toList());
 
         if (!notFoundGroups.isEmpty()) {
@@ -105,8 +106,8 @@ public class RequireGroupCommon {
         }
     }
 
-    private static GroupModel localizarGrupoKeycloak(RealmModel realm, List<String> gruposNaoEncontrados, String grupo) {
-        GroupModel groupModel = KeycloakModelUtils.findGroupByPath(realm, grupo);
+    private static GroupModel localizarGrupoKeycloak(KeycloakSession session,RealmModel realm, List<String> gruposNaoEncontrados, String grupo) {
+        GroupModel groupModel = KeycloakModelUtils.findGroupByPath(session, realm, grupo);
         if (groupModel == null) {
             gruposNaoEncontrados.add(grupo);
         }

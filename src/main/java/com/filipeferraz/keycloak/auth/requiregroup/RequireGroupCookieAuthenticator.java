@@ -43,8 +43,9 @@ public class RequireGroupCookieAuthenticator implements Authenticator {
 
                 RealmModel realm = context.getRealm();
                 UserModel user = authResult.getUser();
+                KeycloakSession session = context.getSession();
 
-                if (!RequireGroupCommon.isAllowed(configModel, realm, user)) {
+                if (!RequireGroupCommon.isAllowed(session, configModel, realm, user)) {
                     context.failure(AuthenticationFlowError.CLIENT_DISABLED);
                     return;
                 }

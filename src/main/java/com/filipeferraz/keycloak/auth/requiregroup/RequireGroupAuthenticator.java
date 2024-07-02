@@ -7,6 +7,7 @@ import org.keycloak.models.AuthenticatorConfigModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
+import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.utils.FormMessage;
 
 
@@ -22,8 +23,9 @@ public class RequireGroupAuthenticator implements Authenticator {
 
         RealmModel realm = context.getRealm();
         UserModel user = context.getUser();
+        KeycloakSession session = context.getSession();
 
-        if (!RequireGroupCommon.isAllowed(configModel, realm, user)) {
+        if (!RequireGroupCommon.isAllowed(session, configModel, realm, user)) {
             context.forkWithErrorMessage(new FormMessage("label", "Permission denied to " + context.getSession().getContext().getClient().getName() + "."));
             return;
         }
